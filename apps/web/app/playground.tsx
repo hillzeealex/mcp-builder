@@ -3,7 +3,16 @@
 import type { DefinitionFormat } from "@mcp-builder/core";
 import JSZip from "jszip";
 import { useState } from "react";
-import { type GenerateResult, generateAction } from "./actions";
+import { type GenerateResult, exportConfigAction, generateAction } from "./actions";
+
+function downloadBlob(filename: string, contents: string, type: string) {
+  const url = URL.createObjectURL(new Blob([contents], { type }));
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
 
 export function Playground({ initialSource }: { initialSource: string }) {
   const [source, setSource] = useState(initialSource);
@@ -36,6 +45,15 @@ export function Playground({ initialSource }: { initialSource: string }) {
     anchor.download = `${result.name}.zip`;
     anchor.click();
     URL.revokeObjectURL(url);
+  }
+
+  async function downloadConfig() {
+    const exported = await exportConfigAction(source, format);
+    if (exported.ok) {
+      downloadBlob("mcp.config.ts", exported.source, "text/typescript");
+    } else {
+      setResult({ ok: false, error: exported.error });
+    }
   }
 
   const activeFile = result?.ok ? result.files.find((file) => file.path === activePath) : undefined;
@@ -74,6 +92,13 @@ export function Playground({ initialSource }: { initialSource: string }) {
                 className="rounded-md border border-slate-700 px-4 py-1.5 text-sm font-semibold text-slate-200 transition hover:border-slate-500 disabled:opacity-40"
               >
                 Download .zip
+              </button>
+              <button
+                type="button"
+                onClick={downloadConfig}
+                className="rounded-md border border-slate-700 px-4 py-1.5 text-sm font-semibold text-slate-200 transition hover:border-slate-500"
+              >
+                Export config
               </button>
             </div>
           </div>
