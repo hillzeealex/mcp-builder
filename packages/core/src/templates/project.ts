@@ -1,5 +1,6 @@
 import { CAPABILITY_KINDS } from "../capabilities/index.js";
 import type { ServerDefinition } from "../schema.js";
+import { TRANSPORTS } from "../transports/index.js";
 
 /** Versions pinned into every generated project, kept in one place. */
 const PINNED = {
@@ -74,19 +75,6 @@ export function renderGitignore(): string {
 }
 
 export function renderReadme(def: ServerDefinition): string {
-  const claudeConfig = JSON.stringify(
-    {
-      mcpServers: {
-        [def.name]: {
-          command: "node",
-          args: [`/ABSOLUTE/PATH/TO/${def.name}/dist/index.js`],
-        },
-      },
-    },
-    null,
-    2,
-  );
-
   return `# ${def.name}
 
 ${def.description ?? "An MCP server generated with [mcp-builder](https://github.com/hillzeealex/mcp-builder)."}
@@ -117,17 +105,7 @@ npm run inspect
 
 ## Connect to Claude Desktop
 
-${
-  def.transport === "stdio"
-    ? `Build the server, then add it to \`claude_desktop_config.json\` (use an **absolute** path):
-
-\`\`\`json
-${claudeConfig}
-\`\`\`
-
-Restart Claude Desktop. The server's tools, resources, and prompts will appear in the client.`
-    : "This server uses the **Streamable HTTP** transport. Start it with `npm start` (listens on `http://localhost:3000/mcp`), then point an HTTP-capable MCP client at that URL."
-}
+${TRANSPORTS[def.transport].renderConnectDoc(def)}
 
 ## Tests
 
