@@ -23,7 +23,7 @@ export {
   type GeneratedProject,
   type GenerateOptions,
 } from "./generator.js";
-export { loadDefinition } from "./load.js";
+export { loadDefinition, parseSource, type DefinitionFormat } from "./load.js";
 export { writeProject, type WriteOptions, type WriteResult } from "./writer.js";
 export { ValidationError, WriteConflictError } from "./errors.js";
 export type { DefinitionIssue } from "./errors.js";
