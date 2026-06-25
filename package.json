@@ -1,0 +1,29 @@
+{
+  "name": "mcp-builder-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Scaffold typed, tested, deployable MCP servers from a declarative definition.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -b",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "check": "pnpm lint && pnpm build && pnpm test",
+    "example:generate": "pnpm build && node packages/cli/dist/index.js generate examples/dev-utils.config.ts --out examples/dev-utils-server --force"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@mcp-builder/core": "workspace:*",
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}
