@@ -9,7 +9,7 @@
 
 <p>
   <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green.svg">
-  <img alt="Node >= 20" src="https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white">
+  <img alt="Node 20+" src="https://img.shields.io/badge/node-20%2B-339933?logo=node.js&logoColor=white">
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white">
   <img alt="MCP SDK 1.29" src="https://img.shields.io/badge/MCP%20SDK-1.29-6366F1">
 </p>
