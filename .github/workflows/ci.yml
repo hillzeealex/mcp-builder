@@ -79,3 +79,12 @@ jobs:
       - name: Test the generated server
         working-directory: ${{ runner.temp }}/generated-server
         run: npm test
+
+      - name: Smoke-check the generated server with the MCP Inspector
+        working-directory: ${{ runner.temp }}/generated-server
+        run: |
+          npx -y @modelcontextprotocol/inspector --cli node dist/index.js --method tools/list | tee tools.json
+          grep -q '"hash_text"' tools.json
+          grep -q '"generate_uuid"' tools.json
+          grep -q '"format_json"' tools.json
+          echo "MCP Inspector smoke check passed"
