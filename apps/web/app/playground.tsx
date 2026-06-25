@@ -1,11 +1,13 @@
 "use client";
 
+import type { DefinitionFormat } from "@mcp-builder/core";
 import JSZip from "jszip";
 import { useState } from "react";
 import { type GenerateResult, generateAction } from "./actions";
 
 export function Playground({ initialSource }: { initialSource: string }) {
   const [source, setSource] = useState(initialSource);
+  const [format, setFormat] = useState<DefinitionFormat>("json");
   const [result, setResult] = useState<GenerateResult | null>(null);
   const [activePath, setActivePath] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -13,7 +15,7 @@ export function Playground({ initialSource }: { initialSource: string }) {
   async function generate() {
     setPending(true);
     try {
-      const next = await generateAction(source);
+      const next = await generateAction(source, format);
       setResult(next);
       setActivePath(next.ok ? (next.files[0]?.path ?? null) : null);
     } finally {
@@ -45,8 +47,18 @@ export function Playground({ initialSource }: { initialSource: string }) {
       <div className="grid flex-1 gap-6 lg:grid-cols-2">
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-slate-300">Definition (JSON)</h2>
+            <h2 className="text-sm font-semibold text-slate-300">
+              Definition ({format.toUpperCase()})
+            </h2>
             <div className="flex gap-2">
+              <select
+                value={format}
+                onChange={(event) => setFormat(event.target.value as DefinitionFormat)}
+                className="rounded-md border border-slate-700 bg-slate-900 px-2 py-1.5 text-sm text-slate-200 outline-none focus:border-indigo-500"
+              >
+                <option value="json">JSON</option>
+                <option value="yaml">YAML</option>
+              </select>
               <button
                 type="button"
                 onClick={generate}
