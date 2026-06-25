@@ -47,8 +47,6 @@ jobs:
   # then install, build, and test it in isolation (outside the pnpm workspace).
   generated-server:
     runs-on: ubuntu-latest
-    env:
-      OUT_DIR: ${{ runner.temp }}/generated-server
     steps:
       - uses: actions/checkout@v4
 
@@ -68,16 +66,16 @@ jobs:
         run: pnpm build
 
       - name: Generate a server from the example definition
-        run: node packages/cli/dist/index.js generate examples/dev-utils.config.ts --out "$OUT_DIR" --force
+        run: node packages/cli/dist/index.js generate examples/dev-utils.config.ts --out "$RUNNER_TEMP/generated-server" --force
 
       - name: Install the generated server
-        working-directory: ${{ env.OUT_DIR }}
+        working-directory: ${{ runner.temp }}/generated-server
         run: npm install
 
       - name: Build the generated server
-        working-directory: ${{ env.OUT_DIR }}
+        working-directory: ${{ runner.temp }}/generated-server
         run: npm run build
 
       - name: Test the generated server
-        working-directory: ${{ env.OUT_DIR }}
+        working-directory: ${{ runner.temp }}/generated-server
         run: npm test
