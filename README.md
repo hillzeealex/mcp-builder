@@ -20,7 +20,31 @@
 
 ## What is this?
 
-`mcp-builder` turns a single declarative file into a complete [Model Context Protocol](https://modelcontextprotocol.io) server: one module per capability, real [Zod](https://zod.dev) schemas, an inferred type for every handler, a smoke test, and a README with the Claude wiring already filled in.
+### New to MCP? Start here
+
+AI assistants like Claude are powerful, but on their own they cannot run your code, read your database, or call your API. The [Model Context Protocol](https://modelcontextprotocol.io) (MCP) is the standard way to give them those abilities. Think of it as **a USB port for AI**: you build a small program (an "MCP server") that plugs in and exposes three kinds of things:
+
+- **Tools** — actions the assistant can take ("hash this text", "create a ticket").
+- **Resources** — data it can read ("the contents of this file", "today's metrics").
+- **Prompts** — ready-made instructions it can reuse ("review this code").
+
+Writing one of these servers by hand means a lot of repetitive plumbing: schemas, type definitions, validation, wiring, tests, config. **`mcp-builder` writes all of that for you** from a short description, so you only fill in the actual logic.
+
+### The idea in one picture
+
+```mermaid
+flowchart TD
+  A["You want Claude to do<br/>something new<br/><i>(e.g. hash text, query a DB)</i>"] --> B["Describe it in one file<br/><b>mcp.config.ts</b>"]
+  B --> C["Run<br/><b>mcp-builder generate</b>"]
+  C --> D["Get a complete MCP server<br/><i>typed, tested, runnable</i>"]
+  D --> E["Fill in the handler logic<br/><i>(the only part that's yours to write)</i>"]
+  E --> F["Plug it into Claude"]
+  F --> G["Claude can now use<br/>your tools, data & prompts"]
+```
+
+### What you actually get
+
+`mcp-builder` turns a single declarative file into a complete MCP server: one module per capability, real [Zod](https://zod.dev) schemas, an inferred type for every handler, a smoke test, and a README with the Claude wiring already filled in.
 
 It is **not** a static template you clone and edit by hand. You describe *what your server exposes*, and the generator writes the project for you. Same input, same output, every time (the generation is pure and snapshot-tested).
 
