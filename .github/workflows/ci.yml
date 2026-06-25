@@ -41,3 +41,43 @@ jobs:
 
       - name: Build web app
         run: pnpm --filter @mcp-builder/web build
+
+  # Proves end to end that code produced by the generator actually compiles and
+  # passes its own tests: scaffold a fresh server from the example definition,
+  # then install, build, and test it in isolation (outside the pnpm workspace).
+  generated-server:
+    runs-on: ubuntu-latest
+    env:
+      OUT_DIR: ${{ runner.temp }}/generated-server
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build core + CLI
+        run: pnpm build
+
+      - name: Generate a server from the example definition
+        run: node packages/cli/dist/index.js generate examples/dev-utils.config.ts --out "$OUT_DIR" --force
+
+      - name: Install the generated server
+        working-directory: ${{ env.OUT_DIR }}
+        run: npm install
+
+      - name: Build the generated server
+        working-directory: ${{ env.OUT_DIR }}
+        run: npm run build
+
+      - name: Test the generated server
+        working-directory: ${{ env.OUT_DIR }}
+        run: npm test
