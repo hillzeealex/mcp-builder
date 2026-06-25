@@ -219,7 +219,7 @@ flowchart LR
   cfg["mcp.config.ts"] -->|loadDefinition| def["ServerDefinition<br/>(validated, normalized)"]
   def -->|generateProject<br/><i>pure</i>| files["GeneratedProject<br/>{ files: [...] }"]
   files -->|writeProject<br/><i>only side effect</i>| disk[("project on disk")]
-  files -.->|"download (future web UI)"| browser["browser"]
+  files -->|"download .zip (web playground)"| browser["browser"]
 ```
 
 The public surface of `@mcp-builder/core` is five functions:
@@ -241,11 +241,21 @@ mcp-builder/
 ├── packages/
 │   ├── core/   # @mcp-builder/core — schema, codegen, generator (no I/O)
 │   └── cli/    # mcp-builder — thin CLI over core (generate + init)
+├── apps/
+│   └── web/    # Next.js playground — same core, in the browser
 ├── examples/
 │   ├── dev-utils.config.ts   # the example definition
 │   └── dev-utils-server/     # the generated + implemented server
 └── docs/
     └── definition-format.md  # full reference for the definition schema
+```
+
+### Web playground
+
+The CLI and the web UI are both thin adapters over the same pure `core`, which is exactly what the architecture was designed to make cheap. The playground (`apps/web`, Next.js App Router + Tailwind) lets you edit a JSON definition, preview every generated file, and download the project as a `.zip`, with no duplicated generation logic.
+
+```bash
+pnpm --filter @mcp-builder/web dev   # http://localhost:3000
 ```
 
 ---
@@ -275,7 +285,7 @@ pnpm check      # lint + build + test
 - [x] CLI `generate` and `init`, stdio + Streamable HTTP transports
 - [x] Pure, snapshot-tested core
 - [x] TypeScript, JSON, and YAML definitions
-- [ ] Web UI that consumes the same `core` to generate and download a server
+- [x] Web playground that consumes the same `core` to generate and download a server
 - [ ] Optional output validation against the MCP Inspector in CI
 
 ---
