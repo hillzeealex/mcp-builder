@@ -1,10 +1,6 @@
-import { literal, toCamelCase } from "../codegen/util.js";
-import type {
-  PromptDefinition,
-  ResourceDefinition,
-  ServerDefinition,
-  ToolDefinition,
-} from "../schema.js";
+import { CAPABILITY_KINDS } from "../capabilities/index.js";
+import { literal } from "../codegen/util.js";
+import type { ServerDefinition } from "../schema.js";
 
 /**
  * Render `src/index.ts` for the generated server: imports for every capability
@@ -16,20 +12,10 @@ export function renderServerIndex(def: ServerDefinition): string {
     `import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";`,
     ...transportImports(def.transport),
     "",
-    ...def.tools.map((t) => `import * as ${alias(t.name, "Tool")} from "./tools/${t.name}.js";`),
-    ...def.resources.map(
-      (r) => `import * as ${alias(r.name, "Resource")} from "./resources/${r.name}.js";`,
-    ),
-    ...def.prompts.map(
-      (p) => `import * as ${alias(p.name, "Prompt")} from "./prompts/${p.name}.js";`,
-    ),
+    ...CAPABILITY_KINDS.flatMap((kind) => kind.imports(def)),
   ].join("\n");
 
-  const registrations = [
-    ...def.tools.map(renderToolRegistration),
-    ...def.resources.map(renderResourceRegistration),
-    ...def.prompts.map(renderPromptRegistration),
-  ].join("\n\n");
+  const registrations = CAPABILITY_KINDS.flatMap((kind) => kind.registrations(def)).join("\n\n");
 
   return `${imports}
 
@@ -60,36 +46,6 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   });
 }
 `;
-}
-
-function renderToolRegistration(tool: ToolDefinition): string {
-  const ns = alias(tool.name, "Tool");
-  const config = configObject([
-    ["title", tool.title === undefined ? undefined : literal(tool.title)],
-    ["description", literal(tool.description)],
-    ["inputSchema", `${ns}.inputShape`],
-  ]);
-  return `server.registerTool(${literal(tool.name)}, ${config}, ${ns}.handler);`;
-}
-
-function renderResourceRegistration(resource: ResourceDefinition): string {
-  const ns = alias(resource.name, "Resource");
-  const config = configObject([
-    ["title", resource.title === undefined ? undefined : literal(resource.title)],
-    ["description", literal(resource.description)],
-    ["mimeType", literal(resource.mimeType)],
-  ]);
-  return `server.registerResource(${literal(resource.name)}, ${literal(resource.uri)}, ${config}, ${ns}.read);`;
-}
-
-function renderPromptRegistration(prompt: PromptDefinition): string {
-  const ns = alias(prompt.name, "Prompt");
-  const config = configObject([
-    ["title", prompt.title === undefined ? undefined : literal(prompt.title)],
-    ["description", literal(prompt.description)],
-    ["argsSchema", `${ns}.argsShape`],
-  ]);
-  return `server.registerPrompt(${literal(prompt.name)}, ${config}, ${ns}.handler);`;
 }
 
 function renderMain(def: ServerDefinition): string {
@@ -167,17 +123,6 @@ function transportImports(transport: ServerDefinition["transport"]): string[] {
     `import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";`,
     `import { fileURLToPath } from "node:url";`,
   ];
-}
-
-/** Build a `{ key: value }` literal, dropping entries whose value is undefined. */
-function configObject(entries: [string, string | undefined][]): string {
-  const present = entries.filter((entry): entry is [string, string] => entry[1] !== undefined);
-  const body = present.map(([key, value]) => `${key}: ${value}`).join(", ");
-  return `{ ${body} }`;
-}
-
-function alias(name: string, suffix: string): string {
-  return `${toCamelCase(name)}${suffix}`;
 }
 
 function indentBlock(block: string, depth: number): string {

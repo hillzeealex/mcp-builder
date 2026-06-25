@@ -1,3 +1,4 @@
+import { CAPABILITY_KINDS } from "../capabilities/index.js";
 import type { ServerDefinition } from "../schema.js";
 
 /** Versions pinned into every generated project, kept in one place. */
@@ -137,15 +138,10 @@ npm test
 }
 
 function renderCapabilityTable(def: ServerDefinition): string {
-  const rows: string[] = ["| Kind | Name | Description |", "| --- | --- | --- |"];
-  for (const tool of def.tools) {
-    rows.push(`| tool | \`${tool.name}\` | ${tool.description} |`);
-  }
-  for (const resource of def.resources) {
-    rows.push(`| resource | \`${resource.name}\` | ${resource.description} |`);
-  }
-  for (const prompt of def.prompts) {
-    rows.push(`| prompt | \`${prompt.name}\` | ${prompt.description} |`);
-  }
+  const rows = [
+    "| Kind | Name | Description |",
+    "| --- | --- | --- |",
+    ...CAPABILITY_KINDS.flatMap((kind) => kind.readmeRows(def)),
+  ];
   return rows.join("\n");
 }

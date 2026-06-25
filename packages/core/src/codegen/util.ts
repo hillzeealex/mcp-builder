@@ -21,3 +21,19 @@ export function indent(block: string, depth = 1): string {
 export function toCamelCase(name: string): string {
   return name.replace(/_([a-z0-9])/g, (_, char: string) => char.toUpperCase());
 }
+
+/**
+ * Build an import alias for a capability module, e.g. `hashTextTool`. The
+ * per-kind suffix is what keeps a tool and a resource of the same name from
+ * colliding in the generated server's imports.
+ */
+export function alias(name: string, suffix: string): string {
+  return `${toCamelCase(name)}${suffix}`;
+}
+
+/** Build a `{ key: value }` literal, dropping entries whose value is undefined. */
+export function configObject(entries: [string, string | undefined][]): string {
+  const present = entries.filter((entry): entry is [string, string] => entry[1] !== undefined);
+  const body = present.map(([key, value]) => `${key}: ${value}`).join(", ");
+  return `{ ${body} }`;
+}
