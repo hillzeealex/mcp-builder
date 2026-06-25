@@ -14,8 +14,8 @@ program
 
 program
   .command("generate")
-  .description("Generate a server project from an mcp.config.ts (or JSON) definition")
-  .argument("<config>", "path to the definition file")
+  .description("Generate a server project from a TypeScript, JSON, or YAML definition")
+  .argument("<config>", "path to the definition file (.ts, .js, .json, .yaml)")
   .option("-o, --out <dir>", "output directory (defaults to the server name)")
   .option("-f, --force", "overwrite a non-empty output directory")
   .option("--no-tests", "skip generating the smoke test")

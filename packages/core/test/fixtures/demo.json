@@ -1,0 +1,6 @@
+{
+  "name": "demo-json",
+  "version": "0.1.0",
+  "description": "Loaded from JSON",
+  "tools": [{ "name": "ping", "description": "Reply with pong" }]
+}
