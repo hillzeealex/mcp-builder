@@ -1,9 +1,20 @@
 # Definition format
 
-A definition is the single source of truth for a generated server. Write it as a typed
-`mcp.config.ts` and wrap it in `defineServer(...)` for full autocompletion. It is validated and
-normalized by `parseDefinition` before any code is generated; invalid definitions throw a
-`ValidationError` listing every problem at once.
+A definition is the single source of truth for a generated server. The recommended form is a typed
+`mcp.config.ts` wrapped in `defineServer(...)` for full autocompletion, but because a definition is
+plain data it can equally be written as **JSON** or **YAML**. `loadDefinition` dispatches on the
+file extension (`.ts`/`.js` via jiti, `.json`, `.yaml`/`.yml`); all formats converge on the same
+validation. Definitions are validated and normalized by `parseDefinition` before any code is
+generated; invalid ones throw a `ValidationError` listing every problem at once.
+
+```yaml
+# mcp.yaml — the same definition, in YAML
+name: dev-utils
+version: 0.1.0
+tools:
+  - name: ping
+    description: Reply with pong
+```
 
 ## Server
 

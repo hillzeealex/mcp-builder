@@ -274,7 +274,7 @@ pnpm check      # lint + build + test
 
 - [x] CLI `generate` and `init`, stdio + Streamable HTTP transports
 - [x] Pure, snapshot-tested core
-- [ ] JSON / YAML definitions (the schema is already serializable)
+- [x] TypeScript, JSON, and YAML definitions
 - [ ] Web UI that consumes the same `core` to generate and download a server
 - [ ] Optional output validation against the MCP Inspector in CI
 
