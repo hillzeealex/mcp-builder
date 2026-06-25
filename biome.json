@@ -12,7 +12,9 @@
       "coverage",
       "**/*.tsbuildinfo",
       "packages/core/test/__snapshots__",
-      "examples/dev-utils-server"
+      "examples/dev-utils-server",
+      "**/.next",
+      "**/next-env.d.ts"
     ]
   },
   "formatter": {

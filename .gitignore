@@ -6,6 +6,10 @@ node_modules/
 dist/
 *.tsbuildinfo
 
+# Next.js
+.next/
+next-env.d.ts
+
 # Test / coverage
 coverage/
 
