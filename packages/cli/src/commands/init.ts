@@ -1,6 +1,11 @@
 import { resolve } from "node:path";
 import * as p from "@clack/prompts";
-import { type ServerDefinitionInput, generateProject, writeProject } from "@mcp-builder/core";
+import {
+  type ServerDefinitionInput,
+  generateProject,
+  serializeDefinition,
+  writeProject,
+} from "@mcp-builder/core";
 import { ui } from "../ui.js";
 
 export interface InitArgs {
@@ -103,13 +108,8 @@ async function collectTools(): Promise<NonNullable<ServerDefinitionInput["tools"
 async function writeConfigFile(path: string, definition: ServerDefinitionInput): Promise<void> {
   const { mkdir, writeFile } = await import("node:fs/promises");
   const { dirname } = await import("node:path");
-  const source = `import { defineServer } from "@mcp-builder/core";\n\nexport default defineServer(${JSON.stringify(
-    definition,
-    null,
-    2,
-  )});\n`;
   await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, source, "utf8");
+  await writeFile(path, serializeDefinition(definition, "ts"), "utf8");
 }
 
 /** Resolve a clack prompt, exiting cleanly if the user cancels. */
