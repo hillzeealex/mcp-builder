@@ -280,14 +280,23 @@ pnpm check      # lint + build + test
 
 ---
 
-## Roadmap
+## What's built
 
-- [x] CLI `generate` and `init`, stdio + Streamable HTTP transports
-- [x] Pure, snapshot-tested core
-- [x] TypeScript, JSON, and YAML definitions
-- [x] Web playground that consumes the same `core` to generate and download a server
-- [x] Output validation in CI: a generated server is built and tested on every push
-- [x] MCP Inspector smoke check in CI (`tools/list` on the generated server)
+Every item below is implemented, tested, and verified in CI.
+
+- **CLI: `generate` and `init`.** `mcp-builder generate <definition>` scaffolds a project; `init` walks you through creating one interactively. Generated servers support both the **stdio** transport (for Claude Desktop) and **Streamable HTTP** (for remote clients).
+- **A pure, deterministic core.** `generateProject` takes a definition and returns the project files in memory, with no file-system side effects. Same input, same output, every time, which is what makes it snapshot-testable. The CLI and the web UI are thin adapters over it.
+- **Deep modules behind small interfaces.** Each capability kind (tool, resource, prompt) and each transport (stdio, http) is one module behind a registry, so adding a kind or a transport is a single, local change instead of edits scattered across the codebase.
+- **Three definition formats, one seam.** Definitions can be written as a typed `mcp.config.ts`, JSON, or YAML. A single `parseSource` / `loadDefinition` seam handles all three, and `serializeDefinition` is its inverse (used by `init` and the playground's config export).
+- **A web playground on the same core.** A Next.js app where you edit a JSON or YAML definition, preview every generated file, download the project as a `.zip`, and export a typed `mcp.config.ts`. No generation or parsing logic is duplicated; it imports `@mcp-builder/core` directly.
+- **Output validation in CI.** On every push, CI generates a server from the example definition, then installs, builds, and runs its tests, proving the generator's output actually compiles and passes.
+- **MCP Inspector smoke check in CI.** CI also runs the [MCP Inspector](https://github.com/modelcontextprotocol/inspector) in `--cli` mode against the generated server and asserts `tools/list` returns the expected tools, proving the server answers a real MCP client.
+
+## Ideas for later
+
+- Richer field specs (string `format`, number `min`/`max`, regex constraints).
+- A form-based playground editor instead of raw JSON/YAML.
+- Publish `@mcp-builder/core` and `mcp-builder` to npm.
 
 ---
 
