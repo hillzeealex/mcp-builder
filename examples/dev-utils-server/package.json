@@ -1,0 +1,23 @@
+{
+  "name": "dev-utils",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A small toolbox of offline developer utilities, exposed over MCP.",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "inspect": "npm run build && npx @modelcontextprotocol/inspector node dist/index.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}
