@@ -286,7 +286,8 @@ pnpm check      # lint + build + test
 - [x] Pure, snapshot-tested core
 - [x] TypeScript, JSON, and YAML definitions
 - [x] Web playground that consumes the same `core` to generate and download a server
-- [ ] Optional output validation against the MCP Inspector in CI
+- [x] Output validation in CI: a generated server is built and tested on every push
+- [ ] Optional MCP Inspector smoke check in CI
 
 ---
 
