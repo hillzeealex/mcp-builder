@@ -4,6 +4,15 @@
   "description": "Pure, deterministic generator that turns a typed MCP server definition into project files.",
   "type": "module",
   "license": "MIT",
+  "author": "Alexander Hills",
+  "keywords": ["mcp", "model-context-protocol", "claude", "code-generator", "zod"],
+  "homepage": "https://github.com/hillzeealex/mcp-builder#readme",
+  "bugs": "https://github.com/hillzeealex/mcp-builder/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hillzeealex/mcp-builder.git",
+    "directory": "packages/core"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

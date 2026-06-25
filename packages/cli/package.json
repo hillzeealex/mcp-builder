@@ -4,6 +4,14 @@
   "description": "Scaffold typed, tested, deployable MCP servers from a declarative definition.",
   "type": "module",
   "license": "MIT",
+  "author": "Alexander Hills",
+  "homepage": "https://github.com/hillzeealex/mcp-builder#readme",
+  "bugs": "https://github.com/hillzeealex/mcp-builder/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hillzeealex/mcp-builder.git",
+    "directory": "packages/cli"
+  },
   "bin": {
     "mcp-builder": "dist/index.js"
   },
