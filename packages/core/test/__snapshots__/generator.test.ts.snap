@@ -1,0 +1,30 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generateProject > generates a tool module that matches the snapshot 1`] = `
+"import { z } from "zod";
+
+/** Input schema for the \`echo\` tool, generated from the definition. */
+export const inputShape = {
+  message: z.string().describe("What to echo"),
+} satisfies z.ZodRawShape;
+
+/** Validated arguments passed to {@link handler}. */
+export type Input = z.infer<z.ZodObject<typeof inputShape>>;
+
+/**
+ * Echo a message back
+ *
+ * TODO: replace this placeholder with your implementation.
+ */
+export async function handler(input: Input) {
+  return {
+    content: [
+      {
+        type: "text" as const,
+        text: \`echo called with \${JSON.stringify(input)}\`,
+      },
+    ],
+  };
+}
+"
+`;
