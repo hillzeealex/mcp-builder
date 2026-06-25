@@ -252,7 +252,7 @@ mcp-builder/
 
 ### Web playground
 
-The CLI and the web UI are both thin adapters over the same pure `core`, which is exactly what the architecture was designed to make cheap. The playground (`apps/web`, Next.js App Router + Tailwind) lets you edit a JSON definition, preview every generated file, and download the project as a `.zip`, with no duplicated generation logic.
+The CLI and the web UI are both thin adapters over the same pure `core`, which is exactly what the architecture was designed to make cheap. The playground (`apps/web`, Next.js App Router + Tailwind) lets you edit a JSON or YAML definition, preview every generated file, download the project as a `.zip`, and export a typed `mcp.config.ts`, with no duplicated generation or parsing logic.
 
 ```bash
 pnpm --filter @mcp-builder/web dev   # http://localhost:3000
