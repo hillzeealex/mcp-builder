@@ -38,3 +38,6 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Build web app
+        run: pnpm --filter @mcp-builder/web build
